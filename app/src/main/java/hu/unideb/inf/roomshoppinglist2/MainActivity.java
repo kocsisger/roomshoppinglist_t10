@@ -2,6 +2,7 @@ package hu.unideb.inf.roomshoppinglist2;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -13,6 +14,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.room.Room;
 
+import hu.unideb.inf.roomshoppinglist2.databinding.ActivityMainBinding;
 import hu.unideb.inf.roomshoppinglist2.model.ShoppingListDatabase;
 import hu.unideb.inf.roomshoppinglist2.model.ShoppingListItem;
 
@@ -20,42 +22,37 @@ public class MainActivity extends AppCompatActivity {
 
     private ShoppingListDatabase shoppingListDatabase;
 
-    EditText newItemEditText;
-    TextView shoppingListTextView;
+    ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main);
+        setContentView(binding.getRoot());
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        newItemEditText = findViewById(R.id.newItemEditText);
-        shoppingListTextView = findViewById(R.id.shoppingListTextView);
 
         shoppingListDatabase = Room.databaseBuilder(this, ShoppingListDatabase.class, "shoppinglist_db")
                 .fallbackToDestructiveMigration(true)
                 .build();
-
-
-
     }
 
     public void addItem(View view) {
 
         new Thread(() -> {
             ShoppingListItem sli = new ShoppingListItem();
-            sli.setName(newItemEditText.getText().toString());
+            sli.setName(binding.newItemEditText.getText().toString());
             shoppingListDatabase.shoppingListDAO().insertListItem(sli);
 
             String list = shoppingListDatabase.shoppingListDAO().getAllItems().toString();
             Log.d("ChckDB", list);
 
-            runOnUiThread(() -> shoppingListTextView.setText(list));
+            runOnUiThread(() ->binding.shoppingListTextView.setText(list));
         }).start();
     }
 }
