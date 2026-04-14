@@ -36,10 +36,12 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-
         shoppingListDatabase = Room.databaseBuilder(this, ShoppingListDatabase.class, "shoppinglist_db")
                 .fallbackToDestructiveMigration(true)
                 .build();
+
+        shoppingListDatabase.shoppingListDAO().getAllItems().observe(this,
+                shoppingListItems -> binding.shoppingListTextView.setText(shoppingListItems.toString()));
     }
 
     public void addItem(View view) {
@@ -48,11 +50,15 @@ public class MainActivity extends AppCompatActivity {
             ShoppingListItem sli = new ShoppingListItem();
             sli.setName(binding.newItemEditText.getText().toString());
             shoppingListDatabase.shoppingListDAO().insertListItem(sli);
-
-            String list = shoppingListDatabase.shoppingListDAO().getAllItems().toString();
+          /*  String list = shoppingListDatabase.shoppingListDAO().getAllItems().toString();
             Log.d("ChckDB", list);
-
-            runOnUiThread(() ->binding.shoppingListTextView.setText(list));
+            runOnUiThread(() ->binding.shoppingListTextView.setText(list));*/
         }).start();
+    }
+
+    public void clearDB(View view) {
+        new Thread(
+                () -> shoppingListDatabase.shoppingListDAO().deleteDB()
+        ).start();
     }
 }
