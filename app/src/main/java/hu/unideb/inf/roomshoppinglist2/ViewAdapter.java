@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import hu.unideb.inf.roomshoppinglist2.databinding.ItemLayoutBinding;
 import hu.unideb.inf.roomshoppinglist2.model.ShoppingListItem;
 
 public class ViewAdapter extends RecyclerView.Adapter<ViewAdapter.ViewHolder> {
@@ -22,7 +23,7 @@ public class ViewAdapter extends RecyclerView.Adapter<ViewAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewAdapter.ViewHolder holder, int position) {
-
+        holder.setData(data.get(position).getName());
     }
 
     public ViewAdapter(List<ShoppingListItem> data) {
@@ -37,8 +38,15 @@ public class ViewAdapter extends RecyclerView.Adapter<ViewAdapter.ViewHolder> {
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+
+        ItemLayoutBinding binding;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            binding = ItemLayoutBinding.bind(itemView);
+        }
+
+        void setData(String itemName){
+            binding.itemNameTextview.setText(itemName);
         }
     }
 }
