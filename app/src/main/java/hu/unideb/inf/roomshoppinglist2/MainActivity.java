@@ -12,6 +12,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.Observer;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.room.Room;
 
 import java.util.List;
@@ -42,8 +43,10 @@ public class MainActivity extends AppCompatActivity {
                 .fallbackToDestructiveMigration(true)
                 .build();
 
+        binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
         shoppingListDatabase.shoppingListDAO().getAllItems().observe(this,
-                shoppingListItems -> binding.shoppingListTextView.setText(shoppingListItems.toString()));
+                shoppingListItems -> binding.recyclerView.setAdapter(new ViewAdapter(shoppingListItems)));
     }
 
     public void addItem(View view) {
