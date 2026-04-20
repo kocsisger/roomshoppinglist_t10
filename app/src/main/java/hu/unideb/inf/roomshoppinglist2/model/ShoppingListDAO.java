@@ -13,7 +13,7 @@ public interface ShoppingListDAO {
     @Insert
     public void insertListItem(ShoppingListItem sli);
     @Query("SELECT * FROM ShoppingList")
-    public LiveData<List<ShoppingListItem>> getAllItems();
+    public List<ShoppingListItem> getAllItems();
     @Query("DELETE FROM ShoppingList")
     public void deleteDB();
 }
